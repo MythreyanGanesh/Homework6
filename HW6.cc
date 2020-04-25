@@ -8,7 +8,7 @@
 #define MATRIX_WIDTH 3
 #define MATRIX_HEIGHT 5
 #define BOX_WIDTH 20
-#define MATRIX_NAME_STRING "Binary File Reading"
+#define MATRIX_NAME_STRING "Binary File Contents"
 
 using namespace std;
 
@@ -37,8 +37,8 @@ int main()
   CDKSCREEN     *cdkscreen;
   CDKMATRIX     *myMatrix;           // CDK Screen Matrix
 
-  const char            *rowTitles[MATRIX_HEIGHT+1] = {"R0", "R1", "R2", "R3", "R4", "R5"};
-  const char            *columnTitles[MATRIX_WIDTH+1] = {"C0", "C1", "C2", "C3"};
+  const char            *rowTitles[MATRIX_HEIGHT+1] = {"x", "a", "b", "c", "d", "e"};
+  const char            *columnTitles[MATRIX_WIDTH+1] = {"y", "a", "b", "c"};
   int           boxWidths[MATRIX_WIDTH+1] = {BOX_WIDTH, BOX_WIDTH, BOX_WIDTH, BOX_WIDTH};
   int           boxTypes[MATRIX_WIDTH+1] = {vMIXED, vMIXED, vMIXED, vMIXED};
 
@@ -69,14 +69,16 @@ int main()
   /* Display the Matrix */
   drawCDKMatrix(myMatrix, true);
 
-  /*
-   * Dipslay a message
-   */
-  setCDKMatrixCell(myMatrix, 2, 2, "Test Message");
-  drawCDKMatrix(myMatrix, true);    /* required  */
+  
+     /* required  */
   
   BinaryFileHeader *myHeader = new BinaryFileHeader();
   ifstream binHeader("/scratch/perkins/cs3377.bin", ios::in | ios::binary);
+  if(!binHeader){
+    printf("Error opening a binary file");
+    _exit(1);
+  }
+
   binHeader.read((char *) myHeader, sizeof(BinaryFileHeader));
   string output;
   stringstream ss;
@@ -85,7 +87,7 @@ int main()
   setCDKMatrixCell(myMatrix, 1, 1, output.c_str());
   ss.str("");
   ss.clear();
-  ss << "Version: " << myHeader->versionNumber;
+  ss << "Version: " << dec <<  myHeader->versionNumber;
   output = ss.str();
   setCDKMatrixCell(myMatrix, 1, 2, output.c_str());
   ss.str("");
@@ -93,7 +95,28 @@ int main()
   ss << "NumRecords: " << myHeader->numRecords;
   output = ss.str();
   setCDKMatrixCell(myMatrix, 1 ,3, output.c_str());
-  
+  ss.str("");
+  ss.clear();
+  long int offset = sizeof(BinaryFileHeader);
+  BinaryFileRecord *myRecord = new BinaryFileRecord();
+  ifstream binInfile("/scratch/perkins/cs3377.bin", ios::in | ios::binary);
+  if(!binInfile){
+    printf("Error opening a binary file");
+    _exit(1);
+  }
+  binInfile.seekg(offset);
+  for(int i = 2; i <= MATRIX_HEIGHT; i++){
+    if(!binInfile.eof()){
+      binInfile.read((char *) myRecord, sizeof(BinaryFileRecord));
+      ss << "strlen: " << strlen(myRecord->stringBuffer);
+      output = ss.str();
+      setCDKMatrixCell(myMatrix, i, 1, output.c_str());
+      setCDKMatrixCell(myMatrix, i, 2, myRecord->stringBuffer);
+      ss.str("");
+      ss.clear();
+    }
+  }
+ 
   drawCDKMatrix(myMatrix, true);
   int y;
 
