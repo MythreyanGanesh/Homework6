@@ -1,3 +1,23 @@
+
+/*
+ * Filename       HW6.cc
+ * Date           4/25/2020
+ * Author         Mythreyan Ganesh
+ * Email          mrg180010@utdallas.edu
+ * Course         CS 3377.501
+ * Version        1.0
+ * Copyright      2020, All Right Reserved
+ *
+ * Description
+ *
+ *               This is the main file that has the BinaryFileHeader and BinaryFileRecord class defined and 
+ *               reads in the binary file and displays it to the screen using a CDK Matrix
+ *
+ *
+ *
+ */
+
+
 #include <iostream>
 #include <fstream>
 #include <sstream>

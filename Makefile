@@ -1,3 +1,19 @@
+
+#  Filename       Makefile
+#  Date           4/24/2020
+#  Author         Mythreyan Ganesh
+#  Email          mrg180010@utdallas.edu
+#  Course         CS 3377.501
+#  Version        1.0
+#  Copyright      2020, All Right Reserved
+
+#  Description    This is the Makefile that uses the appropriate LDFLAGS, IFLAGS, and libraries to create an executable
+
+
+
+
+
+
 CXX = g++
 CXXFLAGS = 
 CPPFLAGS = -Wall -g -I/scratch/perkins/include
